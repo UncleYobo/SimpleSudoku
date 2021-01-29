@@ -29,7 +29,6 @@ public class Generator : MonoBehaviour
             for (int j = 0; j < 9; j++)
             {
                 grid[i, j] = (i * 3 + i / 3 + j) % 9 + 1;
-                
             }
         }
     }
@@ -79,16 +78,16 @@ public class Generator : MonoBehaviour
         switch (difficulty)
         {
             case GameMode.Easy:
-                hiddenCount = 30;
-                break;
-            case GameMode.Medium:
                 hiddenCount = 40;
                 break;
-            case GameMode.Hard:
+            case GameMode.Medium:
                 hiddenCount = 50;
                 break;
+            case GameMode.Hard:
+                hiddenCount = 57;
+                break;
             case GameMode.Expert:
-                hiddenCount = 60;
+                hiddenCount = 64;
                 break;
         }
     }
@@ -111,9 +110,14 @@ public class Generator : MonoBehaviour
                     newTile.gameObject.name = "Tile " + x + " : " + y;
                     //--Assign value from grid[x, y] to internal text
                     newTile.CurrentNumber = grid[x, y];
+                    //--Assign TileID
+                    newTile.TileID.Add("Row", y);
+                    newTile.TileID.Add("Col", x);
                     spawnedTiles.Add(newTile);
                 }
             }
+            //--Pass unshuffled list to MGMT for CheckGroups
+            GameObject.Find("MGMT").GetComponent<GameplayManager>().SortIntoCheckGroups(spawnedTiles);
 
             //--show/hide tile based on difficulty
             for (int i = spawnedTiles.Count - 1; i > 0; i--)

@@ -14,9 +14,23 @@ public class GameplayManager : MonoBehaviour
     //--TODO: Set this up the right way
     public Generator _boardGenerator;
 
+    public CheckGroup[] checkGroups;
+
     private void Start()
     {
         _boardGenerator.CreateNew(Difficulty);
+    }
+
+    public void SortIntoCheckGroups(List<Tile> tileList)
+    {
+        if(checkGroups.Length == 0)
+        {
+            checkGroups = GetComponentsInChildren<CheckGroup>();
+        }
+        foreach(CheckGroup group in checkGroups)
+        {
+            group.SortGroup(tileList);
+        }
     }
 
     public void SetSelection(GameObject selection)

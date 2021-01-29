@@ -9,6 +9,9 @@ public class Tile : MonoBehaviour
     public TMP_Text Label;
     public Image BackPlate;
     public Color InactiveColor;
+    public Dictionary<string, int> TileID = new Dictionary<string, int>();
+    public bool IsFilled;
+    public List<CheckGroup> CheckGroups = new List<CheckGroup>();
 
     private GameplayManager _mgmt;
     private bool _isSelectable = true;
@@ -41,13 +44,16 @@ public class Tile : MonoBehaviour
 
     public void SetValue(int val)
     {
+        CurrentNumber = val;
+
         if(val != 0)
         {
-            Label.text = val.ToString();
             Label.enabled = true;
+            IsFilled = true;
         } else
         {
             Label.enabled = false;
+            IsFilled = false;
         }
         
     }
