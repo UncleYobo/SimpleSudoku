@@ -7,7 +7,6 @@ public class Generator : MonoBehaviour
 {
     //--Generation var
     public enum GameMode { Easy, Medium, Hard, Expert }
-    public GameMode Difficulty;
     
     int[,] grid = new int[9, 9];
     int hiddenCount;
@@ -17,9 +16,9 @@ public class Generator : MonoBehaviour
     public Transform SpawnPoint;
     public List<Tile> spawnedTiles = new List<Tile>();
 
-    private void Start()
+    public void CreateNew(GameMode difficulty)
     {
-        DifficultyScale();
+        DifficultyScale(difficulty);
         GenerateGrid();
         
     }
@@ -76,9 +75,9 @@ public class Generator : MonoBehaviour
         }
     }
 
-    void DifficultyScale()
+    void DifficultyScale(GameMode difficulty)
     {
-        switch (Difficulty)
+        switch (difficulty)
         {
             case GameMode.Easy:
                 hiddenCount = 30;
