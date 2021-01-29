@@ -20,7 +20,6 @@ public class Generator : MonoBehaviour
     {
         DifficultyScale(difficulty);
         GenerateGrid();
-        
     }
 
     void Init(ref int[,] grid)
@@ -99,6 +98,7 @@ public class Generator : MonoBehaviour
         Init(ref grid);
         UpdateGrid(ref grid, 10);
         CreateBoard(ref grid);
+        ShowSolution(ref grid);
 
         void CreateBoard(ref int[,] grid)
         {
@@ -138,6 +138,21 @@ public class Generator : MonoBehaviour
                 }
                 
             }
+        }
+
+        void ShowSolution(ref int[,] grid)
+        {
+            string solution = "";
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    solution += grid[i, j];
+                }
+                solution += "\n";
+            }
+            string timestamp = DateTime.Now.ToString("F");
+            Debug.Log("Solution for puzzle generated " + timestamp + "\n" + solution);
         }
     }
 }
