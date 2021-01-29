@@ -29,6 +29,14 @@ public class GameplayManager : MonoBehaviour
         _isDirty = true;
     }
 
+    public void SetValue(int val)
+    {
+        if (CurrentSelection)
+        {
+            CurrentSelection.GetComponent<Tile>().SetValue(val);
+        }
+    }
+
     private void LateUpdate()
     {
         if (CurrentSelection)

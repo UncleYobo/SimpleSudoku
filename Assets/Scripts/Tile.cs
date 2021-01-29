@@ -38,4 +38,17 @@ public class Tile : MonoBehaviour
             _mgmt.SetSelection(this.gameObject);
         }
     }
+
+    public void SetValue(int val)
+    {
+        if(val != 0)
+        {
+            Label.text = val.ToString();
+            Label.enabled = true;
+        } else
+        {
+            Label.enabled = false;
+        }
+        
+    }
 }
