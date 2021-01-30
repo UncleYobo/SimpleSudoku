@@ -33,6 +33,27 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
+    public void PerformCheck()
+    {
+        bool isSolved = true;
+
+        foreach(CheckGroup group in checkGroups)
+        {
+            if (!group.Complete)
+            {
+                isSolved = false;
+                break;
+            }
+        }
+
+        if (isSolved)
+        {
+            //--------------REMOVE
+            Debug.Log("Solved!");
+            //--------------REMOVE
+        }
+    }
+
     public void SetSelection(GameObject selection)
     {
         if (CurrentSelection)

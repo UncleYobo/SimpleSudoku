@@ -9,7 +9,7 @@ public class CheckGroup : MonoBehaviour
 
     public bool Complete;
 
-    private List<Tile> Group = new List<Tile>();
+    public List<Tile> Group = new List<Tile>();
 
     public void SortGroup(List<Tile> tileList)
     {
@@ -23,6 +23,7 @@ public class CheckGroup : MonoBehaviour
             if (Row >= RowStart && Row <= RowFinish && Col >= ColStart && Col <= ColFinish)
             {
                 Group.Add(tile);
+                tile.CheckGroups.Add(this.GetComponent<CheckGroup>());
             }
         }
     }
@@ -30,6 +31,11 @@ public class CheckGroup : MonoBehaviour
     public void PerformCheck()
     {
         Complete = GroupIsComplete();
+
+        if (Complete)
+        {
+            GameObject.Find("MGMT").GetComponent<GameplayManager>().PerformCheck();
+        }
     }
 
     public bool GroupIsComplete()

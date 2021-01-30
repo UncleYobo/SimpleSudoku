@@ -21,7 +21,16 @@ public class Tile : MonoBehaviour
         _mgmt = GameObject.Find("MGMT").GetComponent<GameplayManager>();
     }
 
-    public int CurrentNumber { get { return CurrentNumber; } set { Label.text = value.ToString(); } }
+    public int CurrentNumber { 
+        get { 
+            return _currentNumber; 
+        } 
+        set { 
+            Label.text = value.ToString();
+            _currentNumber = value;
+        } 
+    }
+    private int _currentNumber;
 
     public void Show(bool isHiding)
     {
@@ -31,6 +40,7 @@ public class Tile : MonoBehaviour
         {
             BackPlate.color = InactiveColor;
             _isSelectable = false;
+            IsFilled = true;
         }
     }
 
@@ -55,6 +65,10 @@ public class Tile : MonoBehaviour
             Label.enabled = false;
             IsFilled = false;
         }
-        
+
+        foreach(CheckGroup group in CheckGroups)
+        {
+            group.PerformCheck();
+        }
     }
 }
