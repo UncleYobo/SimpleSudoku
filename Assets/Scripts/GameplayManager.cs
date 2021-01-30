@@ -8,16 +8,22 @@ public class GameplayManager : MonoBehaviour
     public Color SelectionColor;
 
     public Generator.GameMode Difficulty;
+    public Generator _boardGenerator;
+    public CheckGroup[] checkGroups;
 
     private GameObject _previousSelection;
     private bool _isDirty;
-    //--TODO: Set this up the right way
-    public Generator _boardGenerator;
 
-    public CheckGroup[] checkGroups;
-
-    private void Start()
+    void Start()
     {
+        DontDestroyOnLoad(this);
+
+        OnNewGameStarted();
+    }
+
+    public void OnNewGameStarted()
+    {
+        _boardGenerator = GameObject.Find("Generator").GetComponent<Generator>();
         _boardGenerator.CreateNew(Difficulty);
     }
 
@@ -25,7 +31,7 @@ public class GameplayManager : MonoBehaviour
     {
         if(checkGroups.Length == 0)
         {
-            checkGroups = GetComponentsInChildren<CheckGroup>();
+            checkGroups = GameObject.Find("CheckGroups").GetComponentsInChildren<CheckGroup>();
         }
         foreach(CheckGroup group in checkGroups)
         {
@@ -48,9 +54,7 @@ public class GameplayManager : MonoBehaviour
 
         if (isSolved)
         {
-            //--------------REMOVE
-            Debug.Log("Solved!");
-            //--------------REMOVE
+            
         }
     }
 
@@ -87,5 +91,14 @@ public class GameplayManager : MonoBehaviour
                 _isDirty = false;
             }
         }
+    }
+
+    public void QuitGame()
+    {
+
+    }
+    public void NewGame()
+    {
+
     }
 }
