@@ -54,7 +54,7 @@ public class GameplayManager : MonoBehaviour
 
         if (isSolved)
         {
-            
+            GameObject.Find("Victory").GetComponent<UIGroup>().OpenGroup();
         }
     }
 
@@ -95,7 +95,7 @@ public class GameplayManager : MonoBehaviour
 
     public void QuitGame()
     {
-
+        
     }
     public void NewGame()
     {
