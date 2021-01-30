@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -11,14 +12,31 @@ public class GameplayManager : MonoBehaviour
     public Generator _boardGenerator;
     public CheckGroup[] checkGroups;
 
+    public bool Ads;
+
     private GameObject _previousSelection;
     private bool _isDirty;
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += SceneChanged;
+    }
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= SceneChanged;
+    }
+
+    void SceneChanged(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name == "Game")
+        {
+            OnNewGameStarted();
+        }
+    }
 
     void Start()
     {
         DontDestroyOnLoad(this);
-
-        OnNewGameStarted();
     }
 
     public void OnNewGameStarted()
@@ -95,10 +113,32 @@ public class GameplayManager : MonoBehaviour
 
     public void QuitGame()
     {
-        
+        Application.Quit();
     }
-    public void NewGame()
+    public void NewGame(string difficulty)
     {
+        switch (difficulty)
+        {
+            case ("Easy"):
+                Difficulty = Generator.GameMode.Easy;
+                break;
+            case ("Medium"):
+                Difficulty = Generator.GameMode.Medium;
+                break;
+            case ("Hard"):
+                Difficulty = Generator.GameMode.Hard;
+                break;
+            case ("Expert"):
+                Difficulty = Generator.GameMode.Expert;
+                break;
+        }
 
+        if (Ads)
+        {
+            SceneManager.LoadScene("VideoAd");
+        } else
+        {
+            SceneManager.LoadScene("Game");
+        }
     }
 }

@@ -48,8 +48,8 @@ public class UIGroup : MonoBehaviour
     {
         GameObject.Find("MGMT").GetComponent<GameplayManager>().QuitGame();
     }
-    public void NewGame()
+    public void NewGame(string difficulty)
     {
-        GameObject.Find("MGMT").GetComponent<GameplayManager>().NewGame();
+        GameObject.Find("MGMT").GetComponent<GameplayManager>().NewGame(difficulty);
     }
 }
