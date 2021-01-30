@@ -15,9 +15,10 @@ public class Number : MonoBehaviour
 
     public void SetValue()
     {
-        if (_mgmt)
+        if (!_mgmt)
         {
-            _mgmt.SetValue(Value);
+            GameObject.Find("MGMT").GetComponent<GameplayManager>();
         }
+        _mgmt.SetValue(Value);
     }
 }

@@ -2927,7 +2927,7 @@ MonoBehaviour:
   Difficulty: 0
   _boardGenerator: {fileID: 0}
   checkGroups: []
-  Ads: 0
+  Ads: 1
 --- !u!4 &1820238327
 Transform:
   m_ObjectHideFlags: 0

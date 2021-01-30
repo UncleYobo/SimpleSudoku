@@ -135,7 +135,7 @@ public class GameplayManager : MonoBehaviour
 
         if (Ads)
         {
-            SceneManager.LoadScene("VideoAd");
+            SceneManager.LoadScene("Ads");
         } else
         {
             SceneManager.LoadScene("Game");
