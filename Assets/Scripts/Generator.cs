@@ -18,6 +18,15 @@ public class Generator : MonoBehaviour
 
     public void CreateNew(GameMode difficulty)
     {
+        if(spawnedTiles.Count >= 0)
+        {
+            foreach(Tile tile in spawnedTiles)
+            {
+                Destroy(tile.gameObject);
+            }
+            spawnedTiles.Clear();
+        }
+
         DifficultyScale(difficulty);
         GenerateGrid();
     }

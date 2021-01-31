@@ -16,6 +16,7 @@ public class GameplayManager : MonoBehaviour
 
     private GameObject _previousSelection;
     private bool _isDirty;
+    private AdHandler _ads;
 
     private void OnEnable()
     {
@@ -28,26 +29,26 @@ public class GameplayManager : MonoBehaviour
 
     void SceneChanged(Scene scene, LoadSceneMode mode)
     {
-        if(scene.name == "Game")
-        {
-            OnNewGameStarted();
-        }
+        
     }
 
     void Start()
     {
         DontDestroyOnLoad(this);
+        _ads = GetComponent<AdHandler>();
     }
 
     public void OnNewGameStarted()
     {
         _boardGenerator = GameObject.Find("Generator").GetComponent<Generator>();
         _boardGenerator.CreateNew(Difficulty);
+
+        StartCoroutine(TriggerBanner());
     }
 
     public void SortIntoCheckGroups(List<Tile> tileList)
     {
-        if(checkGroups.Length == 0)
+        if(checkGroups.Length == 0 || checkGroups[0] == null)
         {
             checkGroups = GameObject.Find("CheckGroups").GetComponentsInChildren<CheckGroup>();
         }
@@ -133,12 +134,17 @@ public class GameplayManager : MonoBehaviour
                 break;
         }
 
+        SceneManager.LoadScene("Game");
+
         if (Ads)
         {
-            SceneManager.LoadScene("Ads");
-        } else
-        {
-            SceneManager.LoadScene("Game");
+            _ads.PlayVideoAd();
         }
+    }
+
+    IEnumerator TriggerBanner()
+    {
+        yield return new WaitForSeconds(3);
+        _ads.ShowBannerAd();
     }
 }

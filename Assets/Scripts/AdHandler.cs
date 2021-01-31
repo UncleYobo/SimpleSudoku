@@ -3,24 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Advertisements;
 using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
 
 public class AdHandler : MonoBehaviour, IUnityAdsListener
 {
-//#if UNITY_IOS
+#if UNITY_IOS
     //private string gameId = "3994016";
-//#elif UNITY_ANDROID
+#elif UNITY_ANDROID
     private string gameId = "3994017";
-//#endif
+#endif
 
     public bool TestMode = true;
-    public string PlacementId;
+    public string VideoPlacementId;
+    public string BannerPlacementId;
 
-    private bool isReady = false;
-
+    private bool hasConnection = false;
+    private bool videoReady = false;
+    private bool bannerReady = false;
+    private GameplayManager _mgmt;
 
     private void Start()
     {
+        _mgmt = GetComponent<GameplayManager>();
         Advertisement.AddListener(this);
         Advertisement.Initialize (gameId, TestMode);
         StartCoroutine(TestForInternet());
@@ -32,58 +35,57 @@ public class AdHandler : MonoBehaviour, IUnityAdsListener
         {
             yield return testRequest.SendWebRequest();
 
-            if(!testRequest.isNetworkError || !testRequest.isHttpError)
+            if (!testRequest.isNetworkError || !testRequest.isHttpError)
             {
-                if(testRequest.downloadedBytes > 0)
+                if (testRequest.downloadedBytes > 0)
                 {
-                    isReady = true;
-                    Debug.Log("Verified connection, showing ad");
-                } else
-                {
-                    LoadNext();
-                    Debug.Log("No connection, skipping");
+                    hasConnection = true;
                 }
-            } else
-            {
-                LoadNext();
-                Debug.Log("No connection, skipping");
             }
         }
     }
 
-    void LoadNext()
+    public void PlayVideoAd()
     {
-        SceneManager.LoadScene("Game");
+        if (videoReady && hasConnection)
+        {
+            Advertisement.Banner.Hide();
+            Advertisement.Show(VideoPlacementId);
+        }
+    }
+    public void ShowBannerAd()
+    {
+        if (bannerReady && hasConnection && !Advertisement.isShowing)
+        {
+            Advertisement.Banner.SetPosition(BannerPosition.TOP_CENTER);
+            Advertisement.Banner.Show(BannerPlacementId);
+        }
     }
 
     public void OnUnityAdsReady(string placementId)
     {
-        if(placementId == PlacementId)
+        if(placementId == VideoPlacementId)
         {
-            Debug.Log("Ad ready");
-            if (isReady)
-            {
-                Advertisement.Show(PlacementId);
-            }
+            videoReady = true;
+        } else if(placementId == BannerPlacementId)
+        {
+            bannerReady = true;
         }
     }
 
     public void OnUnityAdsDidError(string message)
     {
-        Debug.Log("Error, skipped");
     }
 
     public void OnUnityAdsDidStart(string placementId)
     {
-        Debug.Log("Ad started: " + placementId);
     }
 
     public void OnUnityAdsDidFinish(string placementId, ShowResult showResult)
     {
-        Debug.Log("Ad complete, status: " + showResult.ToString());
-        if(placementId == PlacementId)
+        if(placementId == VideoPlacementId)
         {
-            LoadNext();
+            _mgmt.OnNewGameStarted();
         }
     }
 }
