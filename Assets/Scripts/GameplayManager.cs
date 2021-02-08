@@ -8,6 +8,14 @@ public class GameplayManager : MonoBehaviour
     public bool Ads;
     private AdHandler _ads;
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SceneManager.LoadScene("Game");
+        }
+    }
+
     public void OnNewGameStarted()
     {
         StartCoroutine(TriggerBanner());
@@ -21,10 +29,11 @@ public class GameplayManager : MonoBehaviour
     {
         SceneManager.LoadScene("Game");
 
+        /*
         if (Ads)
         {
             _ads.PlayVideoAd();
-        }
+        }*/
     }
 
     IEnumerator TriggerBanner()
