@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2271460479601088794}
   - component: {fileID: 871681709445595404}
   - component: {fileID: 9063677199287544993}
+  - component: {fileID: -6472549554954001864}
   m_Layer: 5
   m_Name: Tile
   m_TagString: Tile
@@ -96,6 +97,37 @@ MonoBehaviour:
   IsFilled: 0
   displayText: {fileID: 2917101085458340475}
   backPlate: {fileID: 871681709445595404}
+  InactiveColor: {r: 0.9339623, g: 0.9339623, b: 0.9339623, a: 1}
+  HighlightedColor: {r: 0.81761, g: 0.95493895, b: 1, a: 1}
+--- !u!114 &-6472549554954001864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2918493320258009327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 9063677199287544993}
+          m_TargetAssemblyTypeName: Tile, Assembly-CSharp
+          m_MethodName: SetSelected
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &5281438880761552468
 GameObject:
   m_ObjectHideFlags: 0

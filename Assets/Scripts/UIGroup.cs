@@ -11,6 +11,7 @@ public class UIGroup : MonoBehaviour
     private void Start()
     {
         CloseGroup();
+        Group.alpha = 0f;
     }
 
     public void ToggleGroup()
@@ -19,13 +20,17 @@ public class UIGroup : MonoBehaviour
 
         Group.interactable = isEnabled;
         Group.blocksRaycasts = isEnabled;
+    }
 
+    void LateUpdate()
+    {
         if (isEnabled)
         {
-            Group.alpha = 1f;
-        } else
+            if (Group.alpha < 1f) Group.alpha += Time.deltaTime * 2f;
+        }
+        else
         {
-            Group.alpha = 0f;
+            if (Group.alpha > 0f) Group.alpha -= Time.deltaTime * 2f;
         }
     }
 
@@ -34,14 +39,12 @@ public class UIGroup : MonoBehaviour
         isEnabled = true;
         Group.interactable = isEnabled;
         Group.blocksRaycasts = isEnabled;
-        Group.alpha = 1f;
     }
     public void CloseGroup()
     {
         isEnabled = false;
         Group.interactable = isEnabled;
         Group.blocksRaycasts = isEnabled;
-        Group.alpha = 0f;
     }
 
     public void QuitGame()

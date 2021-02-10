@@ -9,17 +9,27 @@ public class Generator : MonoBehaviour
 {
     public GameObject TileObject;
     public Transform SpawnPoint;
+    public CanvasGroup LoadingScreen;
+
+    public enum DifficultyLevels { Easy, Medium, Hard, Expert }
 
     List<Tile> spawnedTiles = new List<Tile>();
 
     public bool IsFinished;
+
+    int hiddenCount;
+    public GameplayManager _mgmt;
 
     float timer;
     float rate = 0.01f;
 
     void Start()
     {
+        _mgmt = GameObject.FindGameObjectWithTag("MGMT").GetComponent<GameplayManager>();
+
         CreateNew();
+
+        LoadingScreen.alpha = 1f;
     }
 
     void Update()
@@ -33,11 +43,16 @@ public class Generator : MonoBehaviour
                 
                 AssignValues();
             }
+        } else if (IsFinished && spawnedTiles.Count == 0)
+        {
+            if (LoadingScreen.alpha > 0f) LoadingScreen.alpha -= Time.deltaTime / 2f;
         }
     }
 
     void CreateNew()
     {
+        DifficultyScale();
+
         IsFinished = true;
 
         Init();
@@ -59,6 +74,19 @@ public class Generator : MonoBehaviour
 
             IsFinished = false;
         }
+
+        void DifficultyScale()
+        {
+            if (!_mgmt)
+            {
+                _mgmt = GameObject.Find("MGMT").GetComponent<GameplayManager>();
+            }
+
+            if (_mgmt.Difficulty == DifficultyLevels.Easy) hiddenCount = 35;
+            else if (_mgmt.Difficulty == DifficultyLevels.Medium) hiddenCount = 45;
+            else if (_mgmt.Difficulty == DifficultyLevels.Hard) hiddenCount = 55;
+            else hiddenCount = 64;
+        }
     }
 
     void AssignValues()
@@ -77,20 +105,58 @@ public class Generator : MonoBehaviour
             IsFinished = IsFinishedAssigning();
         } else
         {
-            Debug.Log("Unsolvable");
             SceneManager.LoadScene("Game");
         }
 
-        /*
-        if(randomSelection.Info.Values.Count != 0)
+        if (spawnedTiles.Count == 0 && IsFinished)
         {
-            IsFinished = true;
-            StartCoroutine(ResetPuzzle());
-        } else
-        {
-            
+            GameObject[] allTiles = GameObject.FindGameObjectsWithTag("Tile");
+            ShowSolution(allTiles);
+            HideRandomTiles(allTiles);
+            CheckGroup[] groups = GameObject.Find("CheckGroups").GetComponentsInChildren<CheckGroup>();
+            foreach (CheckGroup g in groups)
+            {
+                g.PerformCheck();
+            }
+
+            _mgmt = GameObject.FindGameObjectWithTag("MGMT").GetComponent<GameplayManager>();
         }
-        */
+
+        void ShowSolution(GameObject[] tiles)
+        {
+            string solution = "Solution:\n" ;
+            string line = "";
+            foreach(GameObject t in tiles)
+            {
+                line += t.GetComponent<Tile>().CurrentValue.ToString() + " ";
+
+                if(line.Length >= 18)
+                {
+                    line += "\n";
+                    solution += line;
+                    line = "";
+                }
+            }
+
+            Debug.Log(solution);
+        }
+
+        void HideRandomTiles(GameObject[] tiles)
+        {
+            for(int i = 0; i < tiles.Length; i++)
+            {
+                GameObject tmp;
+                int rnd = UnityEngine.Random.Range(0, tiles.Length);
+                tmp = tiles[rnd];
+                tiles[rnd] = tiles[i];
+                tiles[i] = tmp;
+            }
+
+            for(int x = 0; x < hiddenCount; x++)
+            {
+                tiles[x].GetComponent<Tile>().HideValue();
+            }
+        }
     }
 
     List<Tile> ReturnSelectionGroup()
