@@ -15,6 +15,8 @@ public class GameplayManager : MonoBehaviour
 
     public UIGroup Victory;
 
+    public bool HasData;
+
     private AdHandler _ads;
     private SaveLoad _saveLoad;
 
@@ -24,9 +26,11 @@ public class GameplayManager : MonoBehaviour
         _ads = GetComponent<AdHandler>();
         _saveLoad = GetComponent<SaveLoad>();
 
-        if (_saveLoad.HasData())
+        HasData = _saveLoad.HasData();
+
+        if(HasData == true)
         {
-            LoadPreviousGame();
+            LoadGame();
         }
     }
 
@@ -40,12 +44,8 @@ public class GameplayManager : MonoBehaviour
 
     public void QuitGame()
     {
+        _saveLoad.SaveState();
         Application.Quit();
-    }
-
-    void LoadPreviousGame()
-    {
-
     }
 
     public void NewGame(string difficulty)
@@ -69,6 +69,17 @@ public class GameplayManager : MonoBehaviour
                 break;
         }
 
+        SceneManager.LoadScene("Game");
+    }
+
+    public void StartLoadSequence()
+    {
+        _saveLoad.LoadState();
+    }
+
+    void LoadGame()
+    {
+        
         SceneManager.LoadScene("Game");
     }
 

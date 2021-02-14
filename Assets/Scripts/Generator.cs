@@ -27,7 +27,13 @@ public class Generator : MonoBehaviour
     {
         _mgmt = GameObject.FindGameObjectWithTag("MGMT").GetComponent<GameplayManager>();
 
-        CreateNew();
+        if (_mgmt.HasData)
+        {
+
+        } else
+        {
+            CreateNew();
+        }
 
         LoadingScreen.alpha = 1f;
     }
@@ -49,6 +55,7 @@ public class Generator : MonoBehaviour
         }
     }
 
+    #region New Game Generation
     void CreateNew()
     {
         DifficultyScale();
@@ -159,6 +166,34 @@ public class Generator : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Load Existing
+
+    public void LoadGame(Payload[] saveData)
+    {
+        List<Payload> payloadList = new List<Payload>();
+        foreach(Payload p in saveData)
+        {
+            payloadList.Add(p);
+        }
+
+        payloadList.OrderBy(x => x.Row).ThenBy(x => x.Col);
+
+        foreach(Payload data in payloadList)
+        {
+            Tile newTile = Instantiate(TileObject, SpawnPoint).GetComponent<Tile>();
+            newTile.gameObject.name = data.Name;
+            newTile.Info.Row = data.Row;
+            newTile.Info.Col = data.Col;
+            newTile.IsInteractive = data.isInteractive;
+            newTile.CurrentValue = data.Value;
+        }
+    }
+
+    #endregion
+
+    #region Helpers
     List<Tile> ReturnSelectionGroup()
     {
         int lowestEntropy = FindLowestEntropy();
@@ -204,4 +239,6 @@ public class Generator : MonoBehaviour
 
         return isFinished;
     }
+
+    #endregion
 }

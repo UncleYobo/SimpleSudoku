@@ -21,7 +21,7 @@ public class Tile : MonoBehaviour
     public Color InactiveColor;
     public Color HighlightedColor;
 
-    public bool IsInteractible;
+    public bool IsInteractive;
 
     public int CurrentValue
     {
@@ -38,7 +38,7 @@ public class Tile : MonoBehaviour
     }
 
     private int _currentValue;
-    private List<CheckGroup> groups = new List<CheckGroup>();
+    public List<CheckGroup> groups = new List<CheckGroup>();
     private GameplayManager _mgmt;
 
     public void Start()
@@ -87,7 +87,7 @@ public class Tile : MonoBehaviour
     {
         CurrentValue = val;
         backPlate.color = InactiveColor;
-        IsInteractible = false;
+        IsInteractive = false;
         PropogateChanges();
 
         void PropogateChanges()
@@ -122,23 +122,32 @@ public class Tile : MonoBehaviour
     {
         CurrentValue = -1;
         IsFilled = false;
-        IsInteractible = true;
+        IsInteractive = true;
         backPlate.color = Color.white;
         displayText.text = "";
     }
 
     public void SetValue(int val)
     {
-        CurrentValue = val;
-        foreach(CheckGroup group in groups)
+        if(val != -1)
         {
-            group.PerformCheck();
+            CurrentValue = val;
+            foreach (CheckGroup group in groups)
+            {
+                group.PerformCheck();
+            }
+        }
+        else
+        {
+            CurrentValue = -1;
+            displayText.text = "";
+            IsFilled = false;
         }
     }
 
     public void SetSelected()
     {
-        if (this.IsInteractible) 
+        if (this.IsInteractive) 
         { 
             _mgmt.SetSelected(this);
 
@@ -159,7 +168,7 @@ public class Tile : MonoBehaviour
 
     public void RemoveHightlight()
     {
-        if (this.IsInteractible)
+        if (this.IsInteractive)
         {
             backPlate.color = Color.white;
         } else
@@ -167,4 +176,17 @@ public class Tile : MonoBehaviour
             backPlate.color = InactiveColor;
         }
     }
+
+    #region Constructors and Helpers
+
+    public Tile(string _name, int _row, int _col, int _val, bool _isInteractive)
+    {
+        this.gameObject.name = _name;
+        Info.Row = _row;
+        Info.Col = _col;
+        CurrentValue = _val;
+        IsInteractive = _isInteractive;
+    }
+
+    #endregion
 }
